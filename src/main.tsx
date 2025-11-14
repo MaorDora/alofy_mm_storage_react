@@ -13,7 +13,10 @@ import HomePage from './pages/HomePage.tsx';
 import WarehousesPage from './pages/WarehousesPage.tsx';
 import WarehouseDetailsPage from './pages/WarehouseDetailsPage.tsx'; 
 import ActivitiesPage from './pages/ActivitiesPage.tsx';
-import EquipmentFormPage from './pages/EquipmentFormPage.tsx'; // ייבוא עמוד הטופס
+import EquipmentFormPage from './pages/EquipmentFormPage.tsx';
+
+// 1. ייבוא העמוד החדש
+import ActivityDetailsPage from './pages/ActivityDetailsPage.tsx';
 
 import './index.css' 
 
@@ -28,45 +31,49 @@ const router = createBrowserRouter([
         </DatabaseProvider>
       </ProtectedRoute>
     ),
-    // כל הנתיבים כאן יהיו "ילדים" של App.tsx
-    // ויוצגו בתוך ה-<Outlet />
     children: [
       {
-        path: "/", // עמוד הבית
+        path: "/", 
         element: <HomePage />,
       },
       {
-        path: "warehouses", // רשימת מחסנים
+        path: "warehouses", 
         element: <WarehousesPage />,
       },
       {
-        path: "warehouses/:warehouseId", // פרטי מחסן ספציפי
+        path: "warehouses/:warehouseId", 
         element: <WarehouseDetailsPage />,
       },
       {
-        path: "activities", // רשימת פעילויות
+        path: "activities", 
         element: <ActivitiesPage />,
       },
       {
-        path: "activities/:activityId", // **חדש**: פלייס-הולדר לפרטי פעילות
-        element: <div>(עמוד פרטי פעילות - יבנה בהמשך)</div>,
+        // 2. החלפת הפלייס-הולדר בעמוד האמיתי
+        path: "activities/:activityId", 
+        element: <ActivityDetailsPage />,
       },
       {
-        path: "item/new", // **חדש**: טופס הוספת פריט
+        // 3. הוספת פלייס-הולדר *חדש* לעמוד העריכה
+        path: "activities/:activityId/edit", 
+        element: <div>(עמוד עריכת ציוד לפעילות - יבנה בהמשך)</div>,
+      },
+      {
+        path: "item/new", 
         element: <EquipmentFormPage />,
       },
       {
-        path: "item/edit/:itemId", // **חדש**: טופס עריכת פריט
+        path: "item/edit/:itemId", 
         element: <EquipmentFormPage />,
       },
       {
-        path: "activity/new", // **חדש**: פלייס-הולדר לטופס פעילות
+        path: "activity/new", 
         element: <div>(טופס הוספת פעילות - יבנה בהמשך)</div>,
       },
     ]
   },
   {
-    path: "/login", // עמוד הלוגין (מחוץ לאפליקציה המאובטחת)
+    path: "/login", 
     element: <LoginPage />,
   },
 ]);
