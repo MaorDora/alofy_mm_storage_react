@@ -1,4 +1,3 @@
-import React from 'react';
 // מייבאים את כלי האימות של Firebase
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 // מייבאים את משתנה ה-auth שיצרנו בקובץ הקונפיג

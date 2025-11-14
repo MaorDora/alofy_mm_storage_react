@@ -1,4 +1,3 @@
-import React from 'react';
 // זהו רכיב מיוחד מ-react-router
 // הוא משמש כ"ממלא מקום" לעמודים הפנימיים
 import { Outlet } from "react-router-dom";
