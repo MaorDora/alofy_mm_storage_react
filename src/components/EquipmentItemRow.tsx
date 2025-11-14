@@ -1,14 +1,13 @@
-// src/components/EquipmentItemRow.tsx
-import React from 'react';
 import type { EquipmentItem } from '../types';
 import { useDatabase } from '../contexts/DatabaseContext';
 import './EquipmentItemRow.css';
 
 interface EquipmentItemRowProps {
   item: EquipmentItem;
+  onClick: () => void; // 1. הוספנו Prop חדש
 }
 
-// מחלקה קטנה לניהול הסטטוסים
+// ... (קבועי statusMap נשארים זהים)
 const statusMap = {
   'available': { text: 'כשיר', class: 'status-available' },
   'charging': { text: 'בטעינה', class: 'status-charging' },
@@ -17,10 +16,9 @@ const statusMap = {
   'loaned': { text: 'הושאל', class: 'status-loaned' }
 };
 
-const EquipmentItemRow: React.FC<EquipmentItemRowProps> = ({ item }) => {
-  const { users } = useDatabase(); // שואב את רשימת המשתמשים
+const EquipmentItemRow: React.FC<EquipmentItemRowProps> = ({ item, onClick }) => { // 2. קיבלנו את onClick
+  const { users } = useDatabase(); 
   
-  // מחליף את getUserById
   const manager = users.find(u => u.id === item.managerUserId);
   const loanedToUser = users.find(u => u.id === item.loanedToUserId);
 
@@ -36,7 +34,8 @@ const EquipmentItemRow: React.FC<EquipmentItemRowProps> = ({ item }) => {
   const statusInfo = statusMap[item.status] || { text: 'לא ידוע', class: 'status-grey' };
 
   return (
-    <div className="equipment-item-content">
+    // 3. הוספנו את onClick ל-div החיצוני
+    <div className="equipment-item-content" onClick={onClick}> 
       <div className="equipment-details">
         <div className="equipment-name">{item.name}</div>
         <div className="equipment-secondary-info" style={{ color: item.status === 'loaned' ? 'var(--status-orange)' : undefined }}>

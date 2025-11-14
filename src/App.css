@@ -95,3 +95,93 @@
     color: var(--text-secondary);
     transform: rotate(180deg);
 }
+
+
+/* src/App.css - הוספה בסוף הקובץ */
+
+.filter-chips {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px 16px 16px;
+    overflow-x: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.filter-chips::-webkit-scrollbar {
+    display: none;
+}
+
+.chip {
+    background-color: var(--input-bg-color);
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    /* מונע שבירת שורה */
+    border: none;
+    /* הוספנו כדי לדרוס ברירות מחדל */
+    transition: background-color 0.2s, color 0.2s, transform 0.1s ease;
+}
+
+.chip:active {
+    transform: scale(0.95);
+}
+
+.chip.active {
+    background-color: var(--action-color);
+    color: var(--text-primary);
+}
+
+
+/* העבר את כל הבלוק הזה מ-EquipmentItemRow.css אל סוף App.css */
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+
+/* צבעי סטטוס */
+
+.equipment-status.status-available,
+.status-dot.available {
+    background-color: var(--status-green);
+}
+
+.equipment-status.status-charging,
+.status-dot.charging {
+    background-color: var(--status-orange);
+}
+
+.equipment-status.status-broken,
+.status-dot.broken {
+    background-color: var(--status-red);
+}
+
+.equipment-status.status-repair,
+.status-dot.repair {
+    background-color: var(--status-orange);
+}
+
+.equipment-status.status-loaned,
+.status-dot.loaned {
+    background-color: var(--status-grey);
+}
+
+
+/* שורה זו צריכה להישאר ב-EquipmentItemRow.css או לעבור ל-App.css אם רוצים רקע */
+
+
+/* .equipment-status.status-available { color: var(--status-green); background-color: rgba(52, 199, 89, 0.1); } */
+
+
+/* ... וכו' ... */
+
+
+/* פשוט תוודא שבלוק ה-status-dot.available/charging... נמצא ב-App.css */

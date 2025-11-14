@@ -1,0 +1,126 @@
+/* src/components/Modal.css */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 100;
+    display: flex;
+    align-items: flex-end;
+    /* מיקום בתחתית */
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-container {
+    background-color: var(--card-bg-color);
+    border-radius: 20px 20px 0 0;
+    z-index: 101;
+    width: 100%;
+    max-width: 500px;
+    /* תמיכה במסכים רחבים */
+    padding: 16px;
+    padding-bottom: calc(30px + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-container {
+    transform: translateY(0);
+}
+
+.modal-title {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin: 0;
+    margin-bottom: 16px;
+}
+
+.modal-options {
+    background-color: #3a3a3a;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.modal-options div {
+    padding: 14px;
+    font-size: 17px;
+    color: var(--text-primary);
+    border-bottom: 1px solid #4a4a4a;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 0.1s ease;
+}
+
+.modal-options div:active {
+    background-color: #444;
+}
+
+.modal-options div:last-child {
+    border-bottom: none;
+}
+
+
+/* כפתורים בתוך המודאל */
+
+.modal-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 17px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    margin-bottom: 12px;
+    font-family: 'Heebo', sans-serif;
+    transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.modal-button:active {
+    transform: scale(0.98);
+}
+
+
+/* כפתור עריכה */
+
+.btn-edit-details {
+    color: var(--text-primary);
+    background-color: #4a4a4a;
+}
+
+
+/* כפתור מחיקה */
+
+.btn-danger {
+    color: var(--status-red);
+    background-color: rgba(255, 59, 48, 0.15);
+}
+
+.btn-danger:hover {
+    background-color: rgba(255, 59, 48, 0.3);
+}
+
+
+/* כפתור ביטול */
+
+.btn-cancel {
+    color: var(--action-color);
+    background-color: #3a3a3a;
+    font-weight: 700;
+    margin-bottom: 0;
+    /* כפתור אחרון */
+}
