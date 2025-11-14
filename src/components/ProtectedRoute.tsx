@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged, type User } from 'firebase/auth';
 import { auth } from '../firebaseConfig'; // מייבאים את משתנה האימות
 import { Navigate } from 'react-router-dom'; // זה כלי ה"זריקה" (redirect)
 
