@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+// זהו רכיב מיוחד מ-react-router
+// הוא משמש כ"ממלא מקום" לעמודים הפנימיים
+import { Outlet } from "react-router-dom";
+
+// TODO: ניצור ונייבא את התפריט התחתון
+// import BottomNav from './components/BottomNav'; 
 
 function App() {
-  const [count, setCount] = useState(0)
+  // כאן, בשלב הבא, נוסיף את הלוגיקה
+  // שבודקת אם המשתמש מחובר.
+  // אם הוא לא מחובר -> נעביר אותו ל- /login
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app-container">
+      <header>
+        {/* כאן יהיה ההאדר העליון
+          (לדוגמה: "שלום, מאור")
+        */}
+      </header>
+
+      <main className="page-content">
+        {/* ה-Outlet הוא החלק החשוב ביותר.
+          כאשר תיגש ל- /home, ה-Router יטען את 
+          קומפוננטת Home *בדיוק במקום הזה*.
+          כאשר תיגש ל- /activities, הוא יטען את Activities כאן.
+        */}
+        <Outlet />
+      </main>
+
+      <footer>
+        {/* כאן נשים את התפריט התחתון.
+          הוא תמיד יישאר קבוע בתחתית המסך
+          בזמן שהתוכן ב- <main> יתחלף.
+        */}
+        {/* <BottomNav /> */}
+        <p>(כאן יהיה התפריט התחתון)</p>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
