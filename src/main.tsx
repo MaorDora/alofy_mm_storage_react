@@ -7,7 +7,7 @@ import App from './App.tsx'
 import LoginPage from './pages/LoginPage.tsx'
 
 // TODO: לייבא את ה-CSS הכללי
-// import './index.css' 
+import './index.css' 
 
 const router = createBrowserRouter([
   {
