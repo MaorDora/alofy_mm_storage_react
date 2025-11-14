@@ -1,0 +1,141 @@
+/* src/pages/EditActivityEquipmentPage.css */
+
+
+/* מיכל עליון לחיפוש ופילטר */
+
+
+/* */
+
+.search-filter-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 16px;
+}
+
+.search-bar {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    background-color: var(--input-bg-color);
+    border-radius: 10px;
+    padding: 0 12px;
+    border: 1px solid var(--input-bg-color);
+}
+
+.search-bar:focus-within {
+    border-color: var(--action-color);
+    box-shadow: 0 0 0 2px rgba(52, 183, 235, 0.3);
+}
+
+.search-bar input {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    padding: 12px 0;
+    font-size: 16px;
+    font-family: 'Heebo', sans-serif;
+}
+
+.search-bar input:focus {
+    outline: none;
+}
+
+
+/* כפתור שמירה תחתון "דביק" */
+
+.action-buttons-sticky {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-color);
+    /* רקע כהה למקרה של גלילה */
+    padding: 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+
+/* סגנון עבור פריט ברשימת הבחירה */
+
+
+/* */
+
+.equipment-select-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #3a3a3a;
+    cursor: pointer;
+}
+
+
+/* הסרת עיצוב ברירת מחדל מרכיב הליבה */
+
+.equipment-select-item .equipment-item-content {
+    flex-grow: 1;
+    border-bottom: none;
+    cursor: pointer;
+}
+
+.equipment-select-checkbox {
+    padding: 0 16px;
+}
+
+
+/* עיצוב צ'קבוקס מותאם אישית (עגול) */
+
+
+/* */
+
+.equipment-select-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.equipment-select-checkbox label {
+    display: block;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--text-secondary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.equipment-select-checkbox input[type="checkbox"]:checked+label {
+    background-color: var(--action-color);
+    border-color: var(--action-color);
+    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%23ffffff%27%20stroke-width%3D%273%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpolyline%20points%3D%2720%206%209%2017%204%2012%27%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: 16px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.equipment-select-checkbox input[type="checkbox"]:disabled+label {
+    background-color: #444;
+    border-color: #555;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+
+/* התאמת פריט מושבת */
+
+
+/* */
+
+.equipment-select-item.disabled {
+    opacity: 0.5;
+}
+
+.equipment-select-item.disabled .equipment-item-content {
+    cursor: not-allowed;
+}
+
+.equipment-select-item.disabled .equipment-item-content:hover {
+    background-color: var(--card-bg-color);
+    /* ביטול אפקט hover */
+}

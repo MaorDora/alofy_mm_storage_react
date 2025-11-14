@@ -14,9 +14,10 @@ import WarehousesPage from './pages/WarehousesPage.tsx';
 import WarehouseDetailsPage from './pages/WarehouseDetailsPage.tsx'; 
 import ActivitiesPage from './pages/ActivitiesPage.tsx';
 import EquipmentFormPage from './pages/EquipmentFormPage.tsx';
+import ActivityDetailsPage from './pages/ActivityDetailsPage.tsx';
 
 // 1. ייבוא העמוד החדש
-import ActivityDetailsPage from './pages/ActivityDetailsPage.tsx';
+import EditActivityEquipmentPage from './pages/EditActivityEquipmentPage.tsx';
 
 import './index.css' 
 
@@ -49,14 +50,13 @@ const router = createBrowserRouter([
         element: <ActivitiesPage />,
       },
       {
-        // 2. החלפת הפלייס-הולדר בעמוד האמיתי
         path: "activities/:activityId", 
         element: <ActivityDetailsPage />,
       },
       {
-        // 3. הוספת פלייס-הולדר *חדש* לעמוד העריכה
+        // 2. החלפת הפלייס-הולדר בעמוד האמיתי
         path: "activities/:activityId/edit", 
-        element: <div>(עמוד עריכת ציוד לפעילות - יבנה בהמשך)</div>,
+        element: <EditActivityEquipmentPage />,
       },
       {
         path: "item/new", 
