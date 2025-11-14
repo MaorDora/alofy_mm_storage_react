@@ -1,7 +1,7 @@
 // src/pages/LoginPage.tsx
 
 // 1. הוספנו ייבואים חדשים
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from '../firebaseConfig'; 

@@ -1,5 +1,5 @@
 // src/contexts/DatabaseContext.tsx
-import React, { createContext, useContext, useState, useEffect,type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect,type ReactNode } from 'react';
 import { collection, onSnapshot,type DocumentData } from 'firebase/firestore';
 import { db } from '../firebaseConfig'; // ייבוא ה-db שלנו
 import type { AppUser, Warehouse, EquipmentItem, Activity } from '../types';

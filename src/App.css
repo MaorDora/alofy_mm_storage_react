@@ -1,42 +1,97 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* src/App.css */
+
+
+/* מעטפת האפליקציה הראשית */
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+
+/* העמוד הפנימי (מה ש-Outlet מרנדר)
+  הוא גדל כדי למלא את כל המקום הפנוי
+  ויש לו גלילה פנימית משלו
+*/
+
+.page-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* ריפוד תחתון כדי שהניווט לא יסתיר תוכן */
+    padding-bottom: 120px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+/* רכיבים כלליים לעמודים */
+
+.page-header {
+    /* ריפוד עליון בטוח (עבור Notch) */
+    padding: calc(40px + env(safe-area-inset-top)) 16px 20px 16px;
+    text-align: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.main-title {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
 }
 
-.card {
-  padding: 2em;
+.subtitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-top: 4px;
 }
 
-.read-the-docs {
-  color: #888;
+.container {
+    padding: 16px;
+}
+
+
+/* עיצוב כרטיס בסיסי (כמו כרטיס מחסן) */
+
+.warehouse-card {
+    background-color: var(--card-bg-color);
+    border-radius: var(--border-radius);
+    margin-bottom: 16px;
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.1s ease;
+}
+
+.warehouse-card:active {
+    transform: scale(0.99);
+}
+
+.warehouse-card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.warehouse-card-status {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.status-green {
+    color: var(--status-green);
+}
+
+.status-red {
+    color: var(--status-red);
+}
+
+.chevron {
+    font-size: 20px;
+    color: var(--text-secondary);
+    transform: rotate(180deg);
 }

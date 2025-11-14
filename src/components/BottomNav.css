@@ -1,0 +1,50 @@
+/* src/components/BottomNav.css */
+
+.bottom-nav {
+    position: fixed;
+    /* שינוי מ-absolute */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(65px + env(safe-area-inset-bottom));
+    background-color: var(--card-bg-color);
+    border-top: 1px solid #444;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 90;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 12px;
+    text-decoration: none;
+    /* הורדת קו תחתון מלינקים */
+    transition: transform 0.1s ease, color 0.2s ease;
+}
+
+.nav-item:active {
+    transform: scale(0.9);
+}
+
+
+/*
+  ה-NavLink של react-router-dom
+  מוסיף 'class="active"' אוטומטית 
+*/
+
+.nav-item.active {
+    color: var(--action-color);
+}
+
+.nav-item svg {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+    fill: currentColor;
+}

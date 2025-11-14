@@ -5,24 +5,40 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from './App.tsx'
 import LoginPage from './pages/LoginPage.tsx'
-import ProtectedRoute from './components/ProtectedRoute.tsx'; // 1. הוספנו ייבוא
+import ProtectedRoute from './components/ProtectedRoute.tsx';
+import { DatabaseProvider } from './contexts/DatabaseContext.tsx';
+
+// 1. ייבוא העמודים החדשים
+import HomePage from './pages/HomePage.tsx';
+import WarehousesPage from './pages/WarehousesPage.tsx';
+import ActivitiesPage from './pages/ActivitiesPage.tsx';
 
 import './index.css' 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    // 2. עטפנו את הרכיב הראשי ב-ProtectedRoute
     element: (
       <ProtectedRoute>
-        <App />
+        <DatabaseProvider>
+          <App />
+        </DatabaseProvider>
       </ProtectedRoute>
     ),
-    // 3. כאן נשים את כל הדפים הפנימיים
+    // 2. הגדרת הניתוב הפנימי
     children: [
-      // TODO: נוסיף כאן דף בית, דף מחסנים וכו'
-      // { path: "/", element: <HomePage /> },
-      // { path: "warehouses", element: <WarehousesPage /> },
+      {
+        path: "/", // עמוד הבית יופיע ב- /
+        element: <HomePage />,
+      },
+      {
+        path: "warehouses", // עמוד המחסנים יופיע ב- /warehouses
+        element: <WarehousesPage />,
+      },
+      {
+        path: "activities", // עמוד הפעילויות יופיע ב- /activities
+        element: <ActivitiesPage />,
+      },
     ]
   },
   {
