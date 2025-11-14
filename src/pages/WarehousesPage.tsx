@@ -1,17 +1,13 @@
-// src/pages/WarehousesPage.tsx
-import React from 'react';
-import { useDatabase } from '../contexts/DatabaseContext'; // 1. ייבוא ה-Hook!
+import { Link } from 'react-router-dom'; // 1. ייבוא Link
+import { useDatabase } from '../contexts/DatabaseContext'; 
 
 function WarehousesPage() {
-  // 2. שאיבת המידע מה-Context
   const { warehouses, equipment, isLoading } = useDatabase();
 
-  // 3. הצגת הודעת טעינה
   if (isLoading) {
     return <div>טוען מחסנים...</div>;
   }
 
-  // פונקציית עזר קטנה (במקום הישנה מ-database.js)
   const getEquipmentCount = (warehouseId: string) => {
     const items = equipment.filter(item => item.warehouseId === warehouseId);
     const available = items.filter(i => i.status === 'available').length;
@@ -30,7 +26,6 @@ function WarehousesPage() {
         {warehouses.length === 0 ? (
           <p>לא נמצאו מחסנים.</p>
         ) : (
-          // 4. רינדור הרשימה על בסיס המידע החי
           warehouses.map(warehouse => {
             const count = getEquipmentCount(warehouse.id);
             const statusClass = (count.total > 0 && (count.available / count.total) < 0.5) 
@@ -38,10 +33,12 @@ function WarehousesPage() {
               : 'status-green';
 
             return (
-              <div 
+              // 2. עטיפה ב-Link במקום div
+              <Link 
+                to={`/warehouses/${warehouse.id}`} // 3. הכתובת הדינאמית
                 key={warehouse.id} 
                 className="warehouse-card"
-                // TODO: נוסיף ניווט כשנלחץ כאן
+                style={{ textDecoration: 'none' }} // ביטול קו תחתון
               >
                 <div>
                   <h3 className="warehouse-card-title">{warehouse.name}</h3>
@@ -50,7 +47,7 @@ function WarehousesPage() {
                   </div>
                 </div>
                 <span className="chevron">&#9664;</span>
-              </div>
+              </Link>
             );
           })
         )}

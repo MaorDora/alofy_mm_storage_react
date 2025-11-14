@@ -1,0 +1,33 @@
+/* src/components/HeaderNav.css */
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    /* ריפוד בטוח */
+    padding: calc(40px + env(safe-area-inset-top)) 16px 20px 16px;
+    border-bottom: 1px solid var(--card-bg-color);
+    position: relative;
+}
+
+.back-button {
+    color: var(--action-color);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    position: absolute;
+    right: 16px;
+    /* מותאם ל-RTL */
+}
+
+.header-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    /* מרכוז אוטומטי */
+    margin: 0 auto;
+    /* טיפול בגלישה */
+    max-width: calc(100% - 120px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

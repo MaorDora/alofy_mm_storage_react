@@ -1,0 +1,100 @@
+/* src/components/EquipmentItemRow.css */
+
+.equipment-item-content {
+    background-color: var(--card-bg-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.equipment-item-content:hover {
+    background-color: #333;
+}
+
+.equipment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.equipment-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.equipment-secondary-info {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.equipment-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-right: 10px;
+    /* מותאם ל-RTL */
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+
+/* צבעי סטטוס */
+
+.equipment-status.status-available {
+    color: var(--status-green);
+    background-color: rgba(52, 199, 89, 0.1);
+}
+
+.equipment-status.status-available .status-dot {
+    background-color: var(--status-green);
+}
+
+.equipment-status.status-charging {
+    color: var(--status-orange);
+    background-color: rgba(255, 149, 0, 0.1);
+}
+
+.equipment-status.status-charging .status-dot {
+    background-color: var(--status-orange);
+}
+
+.equipment-status.status-broken {
+    color: var(--status-red);
+    background-color: rgba(255, 59, 48, 0.1);
+}
+
+.equipment-status.status-broken .status-dot {
+    background-color: var(--status-red);
+}
+
+.equipment-status.status-repair {
+    color: var(--status-orange);
+    background-color: rgba(255, 149, 0, 0.1);
+}
+
+.equipment-status.status-repair .status-dot {
+    background-color: var(--status-orange);
+}
+
+.equipment-status.status-loaned {
+    color: var(--status-grey);
+    background-color: rgba(142, 142, 147, 0.1);
+}
+
+.equipment-status.status-loaned .status-dot {
+    background-color: var(--status-grey);
+}
