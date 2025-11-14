@@ -1,0 +1,33 @@
+/* src/components/Fab.css */
+
+
+/* העתקה כמעט מדויקת של הקוד הישן מ-index.css */
+
+
+/* */
+
+.fab {
+    position: fixed;
+    /* שינוי ל-fixed כדי שיהיה תמיד באותו מקום */
+    left: 20px;
+    bottom: calc(85px + env(safe-area-inset-bottom));
+    width: 56px;
+    height: 56px;
+    background-color: var(--action-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 90;
+    transition: transform 0.1s ease;
+    border: none;
+    /* הוספה לוודאות */
+}
+
+.fab:active {
+    transform: scale(0.95);
+}

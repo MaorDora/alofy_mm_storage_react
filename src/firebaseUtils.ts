@@ -1,10 +1,12 @@
 // src/firebaseUtils.ts
-import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from './firebaseConfig'; // ייבוא ה-db שלנו
-import type { EquipmentItem } from './types';
+import { doc, updateDoc, deleteDoc, setDoc, addDoc, collection, writeBatch } from 'firebase/firestore';
+import { db } from './firebaseConfig';
+import type { EquipmentItem, Activity, Warehouse, AppUser } from './types';
 
 // סוגי הסטטוסים האפשריים
 type EquipmentStatus = EquipmentItem['status'];
+
+// --- פונקציות קיימות (ללא שינוי) ---
 
 /**
  * מעדכן סטטוס של פריט ציוד ספציפי ב-Firebase
@@ -17,11 +19,10 @@ export const updateEquipmentStatus = async (itemId: string, newStatus: Equipment
     status: newStatus
   };
 
-  // אם הסטטוס הוא *לא* מושאל, נקה את השדה 'loanedToUserId'
   if (newStatus !== 'loaned') {
     updateData.loanedToUserId = null;
   }
-  // (בשלב הבא נוסיף לוגיקה לבחירת משתמש כשהסטטוס הוא 'loaned')
+  // TODO: להוסיף לוגיקה לבחירת משתמש כשהסטטוס הוא 'loaned'
 
   try {
     await updateDoc(itemRef, updateData);
@@ -37,7 +38,7 @@ export const updateEquipmentStatus = async (itemId: string, newStatus: Equipment
  */
 export const deleteEquipmentItem = async (itemId: string) => {
   if (!confirm("האם אתה בטוח שברצונך למחוק את הפריט? אין דרך לשחזר פעולה זו.")) {
-    return; // בטל אם המשתמש לחץ 'ביטול'
+    return;
   }
   
   console.log(`מוחק את פריט ${itemId}...`);
@@ -45,12 +46,192 @@ export const deleteEquipmentItem = async (itemId: string) => {
   try {
     await deleteDoc(itemRef);
     console.log("מחיקה הצליחה!");
-    
-    // TODO: להוסיף לוגיקה שתסיר את הפריט הזה גם מכל הפעילויות
-    // (כרגע זה יגרום לפריט פשוט "להיעלם" מהפעילות, וזה מספיק טוב)
-
+    // TODO: להסיר את הפריט מכל הפעילויות
   } catch (error) {
     console.error("שגיאה במחיקת פריט:", error);
     alert("שגיאה במחיקת הפריט.");
+  }
+};
+
+// --- פונקציות חדשות (מתורגמות מ-database.js) ---
+
+/**
+ * מעדכן פריט ציוד קיים
+ */
+export const updateEquipmentItem = async (equipmentId: string, newData: Omit<EquipmentItem, 'id' | 'loanedToUserId'>) => {
+  const itemRef = doc(db, 'equipment', equipmentId);
+  try {
+    // ניצור אובייקט נקי לעדכון
+    const dataToUpdate: any = { ...newData };
+    if (newData.status !== 'loaned') {
+        dataToUpdate.loanedToUserId = null;
+    }
+
+    await updateDoc(itemRef, dataToUpdate);
+    console.log(`פריט ענן ${equipmentId} עודכן בהצלחה.`);
+    return true;
+  } catch (error) {
+    console.error("שגיאה בעדכון פריט בענן:", error);
+    return false;
+  }
+};
+
+/**
+ * מוסיף פריט ציוד חדש
+ */
+export const addNewEquipment = async (itemData: Omit<EquipmentItem, 'id' | 'loanedToUserId'>) => {
+  try {
+    // addDoc ייצור ID אוטומטי
+    const docRef = await addDoc(collection(db, "equipment"), {
+      ...itemData,
+      loanedToUserId: null // הוספת שדה חסר
+    });
+    console.log(`פריט חדש ${docRef.id} נוסף לענן.`);
+    return docRef.id;
+  } catch (error) {
+    console.error("שגיאה בהוספת פריט חדש לענן:", error);
+  }
+};
+
+/**
+ * מוסיף פעילות חדשה
+ */
+export const addNewActivity = async (activityData: Omit<Activity, 'id' | 'equipmentRequiredIds' | 'equipmentMissingIds'>) => {
+  try {
+    const docRef = await addDoc(collection(db, "activities"), {
+      ...activityData,
+      equipmentRequiredIds: [], // ברירת מחדל
+      equipmentMissingIds: []  // ברירת מחדל
+    });
+    console.log(`פעילות חדשה ${docRef.id} נוספה לענן.`);
+    return docRef.id;
+  } catch (error) {
+    console.error("שגיאה בהוספת פעילות חדשה לענן:", error);
+  }
+};
+
+/**
+ * מעדכן פרטי פעילות קיימת (שם, אחראי, תאריך)
+ */
+export const updateActivity = async (activityId: string, newData: Partial<Activity>) => {
+  const activityRef = doc(db, "activities", activityId);
+  try {
+    await updateDoc(activityRef, newData);
+    console.log(`פעילות ענן ${activityId} עודכנה בהצלחה.`);
+    return true;
+  } catch (error) {
+    console.error("שגיאה בעדכון פעילות בענן:", error);
+    return false;
+  }
+};
+
+/**
+ * מוחק פעילות
+ */
+export const deleteActivity = async (activityId: string, activityName: string) => {
+  if (!confirm(`האם אתה בטוח שברצונך למחוק את הפעילות "${activityName}"?`)) {
+    return;
+  }
+  const activityRef = doc(db, "activities", activityId);
+  try {
+    await deleteDoc(activityRef);
+    console.log(`פעילות ${activityId} נמחקה מהענן.`);
+  } catch (error) {
+    console.error("שגיאה במחיקת פעילות מהענן:", error);
+  }
+};
+
+/**
+ * מעדכן את רשימת הציוד המשויך לפעילות
+ */
+export const updateActivityEquipment = async (activityId: string, newEquipmentIds: string[], allEquipment: EquipmentItem[]) => {
+  // לוגיקה זהה לקוד הישן
+  const equipmentRequiredIds: string[] = [];
+  const equipmentMissingIds: string[] = [];
+
+  newEquipmentIds.forEach(itemId => {
+    const item = allEquipment.find(eq => eq.id === itemId);
+    if (item) {
+      if (item.status === 'available' || item.status === 'charging') {
+        equipmentRequiredIds.push(item.id);
+      } else {
+        equipmentMissingIds.push(item.id);
+      }
+    }
+  });
+
+  const activityRef = doc(db, "activities", activityId);
+  try {
+    await updateDoc(activityRef, {
+      equipmentRequiredIds: equipmentRequiredIds,
+      equipmentMissingIds: equipmentMissingIds
+    });
+    console.log(`ציוד פעילות ענן ${activityId} עודכן בהצלחה.`);
+  } catch (error) {
+    console.error("שגיאה בעדכון ציוד פעילות בענן:", error);
+  }
+}
+
+/**
+ * מעדכן שם מחסן
+ */
+export const updateWarehouse = async (warehouseId: string, newName: string) => {
+  if (!newName || newName.trim() === "") {
+    alert("שם מחסן לא יכול להיות ריק.");
+    return false;
+  }
+  const warehouseRef = doc(db, "warehouses", warehouseId);
+  try {
+    await updateDoc(warehouseRef, { name: newName });
+    console.log(`מחסן ענן ${warehouseId} עודכן בהצלחה.`);
+    return true;
+  } catch (error) {
+    console.error("שגיאה בעדכון מחסן בענן:", error);
+    return false;
+  }
+};
+
+/**
+ * מוחק מחסן ואת כל תכולתו
+ */
+export const deleteWarehouseAndContents = async (warehouse: Warehouse, equipment: EquipmentItem[]) => {
+  const confirmation = confirm(
+    `האם אתה בטוח שברצונך למחוק את המחסן "${warehouse.name}"?\n\n` +
+    `אזהרה: פעולה זו תמחק גם את *כל הפריטים* המשויכים למחסן זה.\n` +
+    `אין דרך לשחזר פעולה זו.`
+  );
+
+  if (!confirmation) {
+    return false;
+  }
+
+  console.log(`מתחיל מחיקת מחסן ${warehouse.id} וכל תכולתו...`);
+  
+  const itemsToDelete = equipment.filter(item => item.warehouseId === warehouse.id);
+  
+  // השתמש ב-Batch Write למחיקה יעילה
+  const batch = writeBatch(db);
+
+  try {
+    // 1. הוסף את כל הפריטים למחיקה
+    itemsToDelete.forEach(item => {
+      const itemDocRef = doc(db, "equipment", item.id);
+      batch.delete(itemDocRef);
+    });
+
+    // 2. הוסף את המחסן עצמו למחיקה
+    const warehouseDocRef = doc(db, "warehouses", warehouse.id);
+    batch.delete(warehouseDocRef);
+
+    // 3. בצע את כל פעולות המחיקה בבת אחת
+    await batch.commit();
+    
+    console.log("מחיקה מקומית הושלמה.");
+    return true;
+
+  } catch (error) {
+    console.error("שגיאה קריטית במחיקת מחסן ותכולתו:", error);
+    alert("אירעה שגיאה במחיקה.");
+    return false;
   }
 };

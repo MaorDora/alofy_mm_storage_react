@@ -1,21 +1,30 @@
 // src/App.tsx
+import { useState } from 'react'; // 1. ייבוא useState
 import { Outlet } from "react-router-dom";
-import BottomNav from './components/BottomNav'; // 1. ייבוא הניווט
-import './App.css'; // 2. ייבוא העיצוב הראשי
+import BottomNav from './components/BottomNav';
+import Fab from './components/Fab'; // 2. ייבוא FAB
+import QuickAddModal from './components/QuickAddModal'; // 3. ייבוא המודאל
+
+import './App.css'; 
 
 function App() {
+  // 4. State לניהול נראות המודאל
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
   return (
     <div className="app-container">
-      {/* 3. ה-Outlet הוא החלק החשוב ביותר.
-        הוא יוחלף ב-HomePage, WarehousesPage, וכו'
-        בהתאם לכתובת ה-URL.
-      */}
       <main className="page-content">
         <Outlet />
       </main>
 
-      {/* 4. הניווט התחתון תמיד מוצג */}
       <BottomNav />
+
+      {/* 5. הוספת הכפתור והמודאל */}
+      <Fab onClick={() => setIsAddModalOpen(true)} />
+      <QuickAddModal 
+        isOpen={isAddModalOpen} 
+        onClose={() => setIsAddModalOpen(false)} 
+      />
     </div>
   );
 }

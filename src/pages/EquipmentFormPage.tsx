@@ -1,0 +1,165 @@
+// src/pages/EquipmentFormPage.tsx
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useDatabase } from '../contexts/DatabaseContext';
+import { addNewEquipment, updateEquipmentItem } from '../firebaseUtils';
+import HeaderNav from '../components/HeaderNav';
+import '../components/Form.css'; // ייבוא עיצוב הטופס
+import type { EquipmentItem } from '../types';
+
+// הגדרת טיפוס עבור שדות הטופס
+type EquipmentFormData = Omit<EquipmentItem, 'id' | 'loanedToUserId'>;
+
+function EquipmentFormPage() {
+  const { itemId } = useParams<{ itemId: string }>();
+  const navigate = useNavigate();
+  const { equipment, users, warehouses, isLoading } = useDatabase();
+  
+  const isEditMode = !!itemId;
+  
+  const [formData, setFormData] = useState<EquipmentFormData>({
+    name: '',
+    warehouseId: '',
+    managerUserId: '',
+    status: 'available',
+    lastCheckDate: new Date().toISOString().split('T')[0], // ברירת מחדל להיום
+  });
+
+  // אפקט למילוי הטופס במצב עריכה
+  useEffect(() => {
+    if (isEditMode && equipment.length > 0) {
+      const itemToEdit = equipment.find(item => item.id === itemId);
+      if (itemToEdit) {
+        // נמלא את הטופס עם כל השדות הרלוונטיים
+        const { id, loanedToUserId, ...editableData } = itemToEdit;
+        setFormData(editableData);
+      }
+    }
+  }, [isEditMode, itemId, equipment]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { id, value } = e.target;
+    setFormData(prev => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // ולידציה בסיסית
+    if (!formData.name || !formData.warehouseId || !formData.managerUserId || !formData.lastCheckDate) {
+      alert("אנא מלא את כל השדות.");
+      return;
+    }
+
+    if (isEditMode && itemId) {
+      // --- מצב עריכה ---
+      const success = await updateEquipmentItem(itemId, formData);
+      if (success) {
+        alert("הפריט עודכן בהצלחה!");
+        // חזור לעמוד המחסן שממנו באנו
+        navigate(`/warehouses/${formData.warehouseId}`);
+      } else {
+        alert("שגיאה בעדכון הפריט.");
+      }
+    } else {
+      // --- מצב הוספה ---
+      const newId = await addNewEquipment(formData);
+      if (newId) {
+        alert("פריט חדש נוסף בהצלחה!");
+        // חזור לרשימת המחסנים
+        navigate('/warehouses');
+      } else {
+        alert("שגיאה בהוספת הפריט.");
+      }
+    }
+  };
+
+  if (isLoading) {
+    return <div>טוען נתונים...</div>;
+  }
+
+  const title = isEditMode ? 'עריכת פריט' : 'הוסף פריט חדש';
+
+  return (
+    <div>
+      <HeaderNav title={title} />
+      <div className="container">
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="name">שם הפריט</label>
+            <input 
+              type="text" 
+              id="name" 
+              placeholder="לדוגמה: סנסור #104" 
+              value={formData.name}
+              onChange={handleChange}
+              required 
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="warehouseId">שייך למחסן</label>
+            <select 
+              id="warehouseId"
+              value={formData.warehouseId}
+              onChange={handleChange}
+              required
+            >
+              <option value="">בחר מחסן...</option>
+              {warehouses.map(w => (
+                <option key={w.id} value={w.id}>{w.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="managerUserId">אחראי</label>
+            <select 
+              id="managerUserId"
+              value={formData.managerUserId}
+              onChange={handleChange}
+              required
+            >
+              <option value="">בחר אחראי...</option>
+              {users.map(u => (
+                <option key={u.id} value={u.id}>{u.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="status">סטטוס התחלתי</label>
+            <select 
+              id="status"
+              value={formData.status}
+              onChange={handleChange}
+              required
+            >
+              <option value="available">כשיר</option>
+              <option value="charging">בטעינה</option>
+              <option value="repair">בתיקון</option>
+              <option value="broken">לא כשיר</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="lastCheckDate">תאריך ווידוא אחרון</label>
+            <input 
+              type="date" 
+              id="lastCheckDate"
+              value={formData.lastCheckDate}
+              onChange={handleChange}
+              required 
+            />
+          </div>
+
+          <button type="submit" className="btn-submit">
+            {isEditMode ? 'שמור שינויים' : 'שמור פריט'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default EquipmentFormPage;

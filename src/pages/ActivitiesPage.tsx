@@ -1,4 +1,15 @@
+// src/pages/ActivitiesPage.tsx
+import { useDatabase } from '../contexts/DatabaseContext';
+import ActivityCard from '../components/ActivityCard'; // 1. ייבוא הכרטיס
+
 function ActivitiesPage() {
+  // 2. קבלת הפעילויות מה-Context
+  const { activities, isLoading } = useDatabase();
+
+  if (isLoading) {
+    return <div>טוען פעילויות...</div>;
+  }
+
   return (
     <div>
       <div className="page-header">
@@ -6,7 +17,16 @@ function ActivitiesPage() {
         <div className="subtitle">הפעילויות האחרונות שלך</div>
       </div>
       <div className="container">
-        (כאן תהיה רשימת הפעילויות)
+        {/* 3. הצגת רשימת הפעילויות */}
+        {activities.length === 0 ? (
+          <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '20px' }}>
+            לא נוצרו עדיין פעילויות.
+          </p>
+        ) : (
+          activities.map(activity => (
+            <ActivityCard key={activity.id} activity={activity} />
+          ))
+        )}
       </div>
     </div>
   );

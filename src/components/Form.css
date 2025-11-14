@@ -1,0 +1,74 @@
+/* src/components/Form.css */
+
+
+/* */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--input-bg-color);
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-family: 'Heebo', sans-serif;
+    box-sizing: border-box;
+    /* חשוב */
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--action-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 183, 235, 0.3);
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+.form-group select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%23ffffff%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpolyline%20points%3D%276%209%2012%2015%2018%209%27%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: left 12px center;
+    background-size: 16px 16px;
+    padding-right: 40px;
+}
+
+.btn-submit {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Heebo', sans-serif;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    box-sizing: border-box;
+    background-color: var(--action-color);
+    color: var(--text-primary);
+    margin-top: 30px;
+}
+
+.btn-submit:active {
+    transform: scale(0.98);
+}

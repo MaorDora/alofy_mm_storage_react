@@ -1,0 +1,87 @@
+/* src/components/ActivityCard.css */
+
+
+/* */
+
+.activity-card {
+    background-color: var(--card-bg-color);
+    border-radius: var(--border-radius);
+    margin-bottom: 16px;
+    padding: 16px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    text-decoration: none;
+    /* ללינקים */
+    display: block;
+    /* ללינקים */
+    color: var(--text-primary);
+    /* ללינקים */
+}
+
+.activity-card:active {
+    transform: scale(0.99);
+}
+
+.activity-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.activity-card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.activity-card-date,
+.activity-card-person {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.activity-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.activity-card-status {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.activity-card-status .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+
+/* */
+
+.activity-card-status.status-red {
+    color: var(--status-red);
+}
+
+.activity-card-status.status-green {
+    color: var(--status-green);
+}
+
+.activity-card-status.status-red .status-dot {
+    background-color: var(--status-red);
+}
+
+.activity-card-status.status-green .status-dot {
+    background-color: var(--status-green);
+}
+
+.btn-action-dummy {
+    /* זה רק כדי שייראה כמו הכפתור הישן, זה לא באמת כפתור */
+    color: var(--action-color);
+    font-weight: 500;
+}
