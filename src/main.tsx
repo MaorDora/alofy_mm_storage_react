@@ -1,33 +1,35 @@
+// src/main.tsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-// 1. מחקנו את ההערות וייבאנו את הקבצים שיצרנו
 import App from './App.tsx'
 import LoginPage from './pages/LoginPage.tsx'
+import ProtectedRoute from './components/ProtectedRoute.tsx'; // 1. הוספנו ייבוא
 
-// TODO: לייבא את ה-CSS הכללי
 import './index.css' 
 
 const router = createBrowserRouter([
   {
     path: "/",
-    // 2. החלפנו את הטקסט בקומפוננטה האמיתית
-    element: <App />, 
-
-    // TODO: כאן נוסיף את "הילדים"
-    // (דף בית, מחסנים, פעילויות)
+    // 2. עטפנו את הרכיב הראשי ב-ProtectedRoute
+    element: (
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    ),
+    // 3. כאן נשים את כל הדפים הפנימיים
     children: [
-      // { path: "home", element: <HomePage /> }
+      // TODO: נוסיף כאן דף בית, דף מחסנים וכו'
+      // { path: "/", element: <HomePage /> },
+      // { path: "warehouses", element: <WarehousesPage /> },
     ]
   },
   {
     path: "/login",
-    // 3. החלפנו את הטקסט בקומפוננטה האמיתית
     element: <LoginPage />,
   },
 ]);
-
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

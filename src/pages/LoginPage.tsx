@@ -1,41 +1,59 @@
-// מייבאים את כלי האימות של Firebase
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-// מייבאים את משתנה ה-auth שיצרנו בקובץ הקונפיג
+// src/pages/LoginPage.tsx
+
+// 1. הוספנו ייבואים חדשים
+import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
+import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, type User } from "firebase/auth";
 import { auth } from '../firebaseConfig'; 
 
-// ניצור כאן קובץ CSS בסיסי אח"כ
 // import './LoginPage.css'; 
 
-// זוהי קומפוננטת React.
-// היא מחליפה את ה- <div id="screen-login" ...>
 function LoginPage() {
+  // 2. הוספנו בדיוק את אותה לוגיקת בדיקה מ-ProtectedRoute
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // זו הפונקציה שמטפלת בלוגין
-  // היא מחליפה את handleGoogleLogin מהקובץ java.js
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user); // פשוט נעדכן את המשתמש
+      setIsLoading(false); // ונפסיק לטעון
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // 3. פונקציית הלוגין נשארת כמעט זהה
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      // אם נצליח, הלוגיקה שתהיה לנו ב-App.tsx תקלוט את זה
-      console.log("התחברות מוצלחת:", result.user.displayName);
+      // אין צורך לשמור את ה-result, כי ה-onAuthStateChanged יתפוס את זה
+      await signInWithPopup(auth, provider);
+      // ההתחברות תגרום ל-useEffect לרוץ שוב,
+      // ה-user יתעדכן, והרכיב יתעדכן מחדש
     } catch (error) {
       console.error("שגיאה בהתחברות:", error);
       alert("אירעה שגיאה בהתחברות. נסה שוב.");
     }
   };
 
-  // זה ה-HTML שהקומפוננטה מחזירה
+  // 4. כאן הלוגיקה החדשה
+  if (isLoading) {
+    return <div>טוען נתונים...</div>;
+  }
+
+  // 5. אם המשתמש מחובר (כי הוא לחץ על הכפתור וה-useEffect רץ)
+  if (user) {
+    // -> תזרוק אותו לדף הבית!
+    return <Navigate to="/" replace />;
+  }
+
+  // 6. אם אין משתמש (והפסיק לטעון), תציג את דף הלוגין
   return (
     <div className="login-page-container">
-      {/* אפשר להוסיף כאן את הלוגו והכותרות
-        בדיוק כמו ב-index.html הישן 
-      */}
       <img src="/realdimond.png" alt="לוגו יהלום" className="login-logo" />
       <h1>מלאי אלופי</h1>
       <p>נא להתחבר כדי להמשיך</p>
 
       <button className="login-button" onClick={handleLogin}>
-        {/* אפשר להוסיף כאן את האייקון SVG של גוגל */}
         התחברות עם Google
       </button>
     </div>
