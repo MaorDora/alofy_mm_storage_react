@@ -1,9 +1,10 @@
 // src/components/StatusModal.tsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // 1. ייבוא useNavigate
+import { useNavigate } from 'react-router-dom';
 import type { EquipmentItem } from '../types';
-import { updateEquipmentStatus, deleteEquipmentItem } from '../firebaseUtils';
-import './Modal.css';
+// 1. ייבוא הפונקציה החדשה
+import { updateEquipmentStatus, deleteEquipmentItem, validateEquipmentItem } from '../firebaseUtils';
+import './Modal.css'; 
 
 const statusOptions = [
   { id: 'available', label: 'כשיר', dotClass: 'available' },
@@ -19,7 +20,7 @@ interface StatusModalProps {
 }
 
 const StatusModal: React.FC<StatusModalProps> = ({ item, onClose }) => {
-  const navigate = useNavigate(); // 2. אתחול ה-hook
+  const navigate = useNavigate(); 
 
   const handleStatusChange = (statusId: EquipmentItem['status']) => {
     updateEquipmentStatus(item.id, statusId);
@@ -32,9 +33,15 @@ const StatusModal: React.FC<StatusModalProps> = ({ item, onClose }) => {
   };
 
   const handleEdit = () => {
-    // 3. שינוי הלוגיקה של הכפתור
-    onClose(); // סגור את המודאל
-    navigate(`/item/edit/${item.id}`); // נווט לעמוד העריכה
+    onClose();
+    navigate(`/item/edit/${item.id}`);
+  };
+
+  // 2. הוספת פונקציית ווידוא
+  const handleValidate = async () => {
+    await validateEquipmentItem(item.id);
+    onClose();
+    // אין צורך ברענון ידני, onSnapshot ב-DatabaseContext יטפל בזה
   };
 
   return (
@@ -49,6 +56,15 @@ const StatusModal: React.FC<StatusModalProps> = ({ item, onClose }) => {
             </div>
           ))}
         </div>
+
+        {/* 3. הוספת הכפתור החדש */}
+        {/* הוא יופיע בין "מחק" ל-"ערוך" */}
+        <button 
+          className="modal-button btn-validate"
+          onClick={handleValidate}
+        >
+          בצע ווידוא
+        </button>
 
         <button 
           className="modal-button btn-danger"

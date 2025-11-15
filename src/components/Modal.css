@@ -124,3 +124,58 @@
     margin-bottom: 0;
     /* כפתור אחרון */
 }
+
+
+/* src/components/Modal.css */
+
+
+/* ... (כל הסגנונות הקיימים של .modal-overlay, .modal-container וכו') ... */
+
+.modal-options div:last-child {
+    border-bottom: none;
+}
+
+
+/* כפתורים בתוך המודאל */
+
+.modal-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 17px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    margin-bottom: 12px;
+    font-family: 'Heebo', sans-serif;
+    transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.modal-button:active {
+    transform: scale(0.98);
+}
+
+
+/* --- הוספנו את הסגנון הזה --- */
+
+
+/* כפתור ווידוא (סגנון משני) */
+
+.btn-validate {
+    color: var(--text-primary);
+    background-color: #4a4a4a;
+}
+
+
+/* --- סוף תוספת --- */
+
+
+/* כפתור עריכה (קיים) */
+
+.btn-edit-details {
+    color: var(--text-primary);
+    background-color: #4a4a4a;
+}
+
+
+/* ... (שאר הסגנונות ל-danger ו-cancel נשארים זהים) ... */

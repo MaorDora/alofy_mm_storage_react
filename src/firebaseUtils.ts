@@ -235,3 +235,18 @@ export const deleteWarehouseAndContents = async (warehouse: Warehouse, equipment
     return false;
   }
 };
+export const validateEquipmentItem = async (itemId: string) => {
+  console.log(`מבצע ווידוא עבור ${itemId}...`);
+  const itemRef = doc(db, 'equipment', itemId);
+  const today = new Date().toISOString().split('T')[0]; // פורמט YYYY-MM-DD
+
+  try {
+    await updateDoc(itemRef, {
+      lastCheckDate: today
+    });
+    console.log("ווידוא הצליח!");
+  } catch (error) {
+    console.error("שגיאה בביצוע ווידוא:", error);
+    alert("שגיאה בביצוע הווידוא.");
+  }
+};

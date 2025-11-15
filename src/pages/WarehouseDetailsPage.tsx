@@ -1,12 +1,13 @@
 // src/pages/WarehouseDetailsPage.tsx
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react'; // 1. הוספנו useState
 import { useParams } from 'react-router-dom';
 import { useDatabase } from '../contexts/DatabaseContext';
 import HeaderNav from '../components/HeaderNav';
 import EquipmentItemRow from '../components/EquipmentItemRow';
 import FilterChips from '../components/FilterChips';
-import StatusModal from '../components/StatusModal'; // 1. ייבוא המודאל
-import type { EquipmentItem } from '../types'; // 2. ייבוא הטיפוס
+import StatusModal from '../components/StatusModal';
+import WarehouseOptionsModal from '../components/WarehouseOptionsModal'; // 2. ייבוא המודאל החדש
+import type { EquipmentItem } from '../types';
 
 type FilterType = 'all' | 'validate' | 'broken' | 'loaned';
 
@@ -15,16 +16,20 @@ function WarehouseDetailsPage() {
   const { warehouses, equipment, isLoading } = useDatabase();
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   
-  // 3. הוספת State לניהול המודאל
   const [selectedItem, setSelectedItem] = useState<EquipmentItem | null>(null);
+  // 3. State לניהול המודאל החדש
+  const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
 
   const filteredItems = useMemo(() => {
-    // ... (לוגיקת הסינון נשארת זהה)
     const itemsInWarehouse = equipment.filter(item => item.warehouseId === warehouseId);
+    if (activeFilter === 'all') {
+      return itemsInWarehouse;
+    }
+    
     const today = new Date();
     const validationThreshold = new Date(new Date().setDate(today.getDate() - 30));
+    
     switch (activeFilter) {
-      case 'all': return itemsInWarehouse;
       case 'validate': return itemsInWarehouse.filter(item => new Date(item.lastCheckDate) < validationThreshold);
       case 'broken': return itemsInWarehouse.filter(item => item.status === 'broken' || item.status === 'repair');
       case 'loaned': return itemsInWarehouse.filter(item => item.status === 'loaned');
@@ -44,7 +49,11 @@ function WarehouseDetailsPage() {
 
   return (
     <div>
-      <HeaderNav title={warehouse.name} />
+      {/* 4. הוספת Prop לכותרת כדי להציג את כפתור 3 הנקודות */}
+      <HeaderNav 
+        title={warehouse.name} 
+        onOptionsMenuClick={() => setIsOptionsModalOpen(true)}
+      />
       
       <FilterChips onFilterChange={(filterId) => setActiveFilter(filterId as FilterType)} />
       
@@ -58,20 +67,25 @@ function WarehouseDetailsPage() {
             <EquipmentItemRow 
               key={item.id} 
               item={item}
-              // 4. כשלוחצים, נשמור את הפריט ב-State
               onClick={() => setSelectedItem(item)} 
             />
           ))
         )}
       </div>
 
-      {/* 5. רינדור מותנה של המודאל */}
-      {/* אם selectedItem קיים (לא null), הצג את המודאל */}
+      {/* רינדור מודאל הסטטוס (כמו קודם) */}
       {selectedItem && (
         <StatusModal 
           item={selectedItem}
-          // כשלוחצים "ביטול" או "סגור", נאפס את ה-State
           onClose={() => setSelectedItem(null)} 
+        />
+      )}
+
+      {/* 5. רינדור מותנה של המודאל החדש */}
+      {isOptionsModalOpen && (
+        <WarehouseOptionsModal
+          warehouse={warehouse}
+          onClose={() => setIsOptionsModalOpen(false)}
         />
       )}
     </div>
