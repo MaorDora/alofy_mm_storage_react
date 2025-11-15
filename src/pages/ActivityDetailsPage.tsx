@@ -1,5 +1,5 @@
 // src/pages/ActivityDetailsPage.tsx
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDatabase } from '../contexts/DatabaseContext';
 import HeaderNav from '../components/HeaderNav';
@@ -12,7 +12,7 @@ import {
   checkinActivityEquipment,
   removeItemFromActivity // ייבוא הפונקציה
 } from '../firebaseUtils';
-import type { Activity, EquipmentItem } from '../types';
+import type { EquipmentItem } from '../types';
 import './ActivityDetailsPage.css';
 
 const statusMap: { [key: string]: string } = {

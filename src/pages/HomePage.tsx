@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDatabase } from '../contexts/DatabaseContext';
 import './HomePage.css'; 
-import type { Activity, EquipmentItem } from '../types';
+
 
 // פונקציית עזר לפורמט תאריך (ללא שינוי)
 const formatActivityDate = (dateString: string) => {
