@@ -17,7 +17,7 @@ import EquipmentFormPage from './pages/EquipmentFormPage.tsx';
 import ActivityDetailsPage from './pages/ActivityDetailsPage.tsx';
 
 // 1. ייבוא העמוד החדש
-import EditActivityEquipmentPage from './pages/EditActivityEquipmentPage.tsx';
+import EditActivityEquipmentPage from './pages/EditActivityEquipmentPage.tsx'; //
 
 import './index.css' 
 

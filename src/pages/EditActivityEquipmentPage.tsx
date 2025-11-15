@@ -1,41 +1,43 @@
 // src/pages/EditActivityEquipmentPage.tsx
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDatabase } from '../contexts/DatabaseContext';
 import { updateActivityEquipment } from '../firebaseUtils'; //
 import HeaderNav from '../components/HeaderNav';
-import EquipmentSelectItem from '../components/EquipmentSelectItem';
-import './EditActivityEquipmentPage.css'; // ייבוא העיצוב החדש
-import '../components/Form.css'; // שימוש חוזר ב-CSS של כפתור השמירה
+import EquipmentSelectItem from '../components/EquipmentSelectItem'; // 1. ייבוא הרכיב החדש
+import './EditActivityEquipmentPage.css'; // 2. ייבוא העיצוב
 
 function EditActivityEquipmentPage() {
   const { activityId } = useParams<{ activityId: string }>();
   const navigate = useNavigate();
   const { activities, equipment: allEquipment, isLoading } = useDatabase();
 
+  // 3. State לניהול החיפוש
   const [searchTerm, setSearchTerm] = useState('');
   
-  // נשתמש ב-Set לניהול יעיל של ה-ID שנבחרו
+  // 4. State לניהול הפריטים שנבחרו (נשתמש ב-Set לניהול יעיל של ID-ים)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  // טעינת הפעילות הספציפית
+  // 5. טעינת הפעילות הספציפית
   const activity = useMemo(() => {
     return activities.find(act => act.id === activityId);
   }, [activityId, activities]);
 
-  // אפקט למילוי ראשוני של הפריטים שכבר משויכים
+  // 6. אפקט למילוי ראשוני של הפריטים שכבר משויכים לפעילות
   useEffect(() => {
     if (activity) {
       // ניקח גם את הכשירים וגם את החסרים שכבר שויכו
+      //
       const initialIds = [
         ...activity.equipmentRequiredIds, 
         ...activity.equipmentMissingIds
       ];
       setSelectedIds(new Set(initialIds));
     }
-  }, [activity]); // תלות ב-activity
+  }, [activity]); // תלות ב-activity (ירוץ כשהוא ייטען)
 
-  // סינון הרשימה לפי חיפוש
+  // 7. סינון הרשימה לפי חיפוש
+  //
   const filteredEquipment = useMemo(() => {
     if (searchTerm === '') {
       return allEquipment;
@@ -46,7 +48,7 @@ function EditActivityEquipmentPage() {
     );
   }, [allEquipment, searchTerm]);
 
-  // פונקציה לטיפול בלחיצה על צ'קבוקס
+  // 8. פונקציה לטיפול בלחיצה על צ'קבוקס
   const handleToggle = (itemId: string) => {
     setSelectedIds(prevIds => {
       const newIds = new Set(prevIds);
@@ -59,7 +61,8 @@ function EditActivityEquipmentPage() {
     });
   };
 
-  // פונקציית שמירה
+  // 9. פונקציית שמירה
+  //
   const handleSave = async () => {
     if (!activityId) return;
 
@@ -97,10 +100,19 @@ function EditActivityEquipmentPage() {
       </div>
 
       <div className="equipment-list">
+        {filteredEquipment.length === 0 && (
+          <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '20px' }}>
+            לא נמצאו פריטים תואמים.
+          </p>
+        )}
+        
         {filteredEquipment.map(item => {
+          // לוגיקה זהה לקוד הישן
+          //
           // פריט ניתן לבחירה אם הוא כשיר או בטעינה
           const isSelectable = (item.status === 'available' || item.status === 'charging');
           // פריט מושבת אם אי אפשר לבחור בו, *אלא אם* הוא כבר מסומן
+          // (מה שקורה אם הסטטוס שלו השתנה אחרי שכבר שויך)
           const isDisabled = !isSelectable && !selectedIds.has(item.id);
 
           return (
@@ -115,6 +127,7 @@ function EditActivityEquipmentPage() {
         })}
       </div>
 
+      {/* כפתור שמירה תחתון */}
       <div className="action-buttons-sticky">
         <button className="btn-submit" onClick={handleSave}>
           שמור שינויים

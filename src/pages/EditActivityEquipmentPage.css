@@ -43,10 +43,14 @@
 }
 
 
+/* --- הוספנו את העיצוב הזה --- */
+
+
 /* כפתור שמירה תחתון "דביק" */
 
 .action-buttons-sticky {
     position: fixed;
+    /* שונה מ-absolute כדי להיות תמיד בתחתית המסך */
     bottom: 0;
     left: 0;
     right: 0;
@@ -54,9 +58,38 @@
     /* רקע כהה למקרה של גלילה */
     padding: 16px;
     padding-bottom: calc(16px + env(safe-area-inset-bottom));
+    /* ריפוד בטוח */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
     z-index: 10;
 }
+
+
+/* כפתור שמירה (מ-Form.css) */
+
+.btn-submit {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Heebo', sans-serif;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    box-sizing: border-box;
+    background-color: var(--action-color);
+    color: var(--text-primary);
+    margin: 0;
+    /* איפוס margin */
+}
+
+.btn-submit:active {
+    transform: scale(0.98);
+}
+
+
+/* --- סוף תוספת --- */
 
 
 /* סגנון עבור פריט ברשימת הבחירה */
@@ -69,6 +102,8 @@
     align-items: center;
     border-bottom: 1px solid #3a3a3a;
     cursor: pointer;
+    background-color: var(--card-bg-color);
+    /* הוספנו רקע */
 }
 
 

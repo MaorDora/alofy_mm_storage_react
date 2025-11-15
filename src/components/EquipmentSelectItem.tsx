@@ -1,7 +1,7 @@
 // src/components/EquipmentSelectItem.tsx
 import React from 'react';
 import type { EquipmentItem } from '../types';
-import EquipmentItemRow from './EquipmentItemRow';
+import EquipmentItemRow from './EquipmentItemRow'; // שימוש חוזר ברכיב הקיים
 
 interface EquipmentSelectItemProps {
   item: EquipmentItem;
@@ -30,8 +30,9 @@ const EquipmentSelectItem: React.FC<EquipmentSelectItemProps> = ({
       className={`equipment-select-item ${isDisabled ? 'disabled' : ''}`}
       onClick={handleToggle} // לחיצה על כל השורה מסמנת
     >
-      {/* הפעם אנו מרנדרים את הרכיב EquipmentItemRow
-        אך ללא ה-onClick שלו, מכיוון שהעטיפה החיצונית מטפלת בלחיצה.
+      {/* אנחנו מרנדרים את הרכיב EquipmentItemRow
+        אך מעבירים לו פונקציית onClick ריקה, 
+        מכיוון שה-div העוטף הזה מטפל בלחיצה.
       */}
       <EquipmentItemRow item={item} onClick={() => {}} />
 
