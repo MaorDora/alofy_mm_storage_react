@@ -1,5 +1,5 @@
 // src/firebaseUtils.ts
-import { doc, updateDoc, deleteDoc, setDoc, addDoc, collection, writeBatch } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc, setDoc, addDoc, collection, writeBatch, arrayRemove } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import type { EquipmentItem, Activity, Warehouse, AppUser } from './types';
 
@@ -248,5 +248,92 @@ export const validateEquipmentItem = async (itemId: string) => {
   } catch (error) {
     console.error("שגיאה בביצוע ווידוא:", error);
     alert("שגיאה בביצוע הווידוא.");
+  }
+};
+// src/firebaseUtils.ts
+
+/**
+ * מבצע Check-out לכל הציוד הכשיר המשויך לפעילות.
+ * משנה את הסטטוס שלהם ל-'loaned' ומשייך אותם לאחראי הפעילות.
+ */
+export const checkoutActivityEquipment = async (
+  activity: Activity, 
+  itemsToCheckout: EquipmentItem[]
+) => {
+  console.log(`מבצע Check-out עבור פעילות: ${activity.name}`);
+  const batch = writeBatch(db);
+  const managerId = activity.managerUserId; // האחראי על הפעילות
+
+  itemsToCheckout.forEach(item => {
+    // רק פריטים כשירים או בטעינה ניתנים ל-check-out
+    if (item.status === 'available' || item.status === 'charging') {
+      const itemRef = doc(db, 'equipment', item.id);
+      batch.update(itemRef, {
+        status: 'loaned',
+        loanedToUserId: managerId 
+      });
+    }
+  });
+
+  try {
+    await batch.commit();
+    console.log("Check-out הושלם בהצלחה!");
+    return true;
+  } catch (error) {
+    console.error("שגיאה בביצוע Check-out:", error);
+    alert("שגיאה בביצוע Check-out.");
+    return false;
+  }
+};
+
+/**
+ * מבצע Check-in לכל הציוד ששוייך לפעילות.
+ * מחזיר את הסטטוס שלהם ל-'available' ומנקה את שיוך ההשאלה.
+ */
+export const checkinActivityEquipment = async (
+  activity: Activity,
+  itemsToCheckin: EquipmentItem[]
+) => {
+  console.log(`מבצע Check-in עבור פעילות: ${activity.name}`);
+  const batch = writeBatch(db);
+  const managerId = activity.managerUserId;
+
+  itemsToCheckin.forEach(item => {
+    // נבצע Check-in רק לפריטים שבאמת מושאלים לאחראי הפעילות
+    if (item.status === 'loaned' && item.loanedToUserId === managerId) {
+      const itemRef = doc(db, 'equipment', item.id);
+      batch.update(itemRef, {
+        status: 'available', // TODO: להוסיף לוגיקה חכמה (למשל, אם זה מטען, להעביר ל'בטעינה')
+        loanedToUserId: null
+      });
+    }
+  });
+
+  try {
+    await batch.commit();
+    console.log("Check-in הושלם בהצלחה!");
+    return true;
+  } catch (error) {
+    console.error("שגיאה בביצוע Check-in:", error);
+    alert("שגיאה בביצוע Check-in.");
+    return false;
+  }
+};
+export const removeItemFromActivity = async (activityId: string, itemId: string) => {
+  console.log(`מסיר את פריט ${itemId} מפעילות ${activityId}`);
+  const activityRef = doc(db, 'activities', activityId);
+
+  try {
+    await updateDoc(activityRef, {
+      // arrayRemove יסיר את ה-ID מהמערך, לא משנה באיזה מהם הוא
+      equipmentRequiredIds: arrayRemove(itemId),
+      equipmentMissingIds: arrayRemove(itemId)
+    });
+    console.log("הפריט הוסר בהצלחה מהפעילות!");
+    return true;
+  } catch (error) {
+    console.error("שגיאה בהסרת פריט מפעילות:", error);
+    alert("שגיאה בהסרת הפריט.");
+    return false;
   }
 };

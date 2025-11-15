@@ -129,3 +129,41 @@
 .status-item.missing .status-item-title {
     color: var(--status-red);
 }
+
+.action-buttons {
+    padding: 0 16px;
+    margin-top: 20px;
+    /* ריפוד תחתון בטוח לכפתורים */
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Heebo', sans-serif;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    box-sizing: border-box;
+    transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: var(--action-color);
+    color: var(--text-primary);
+    margin-top: 30px;
+}
+
+.btn-secondary {
+    background-color: var(--card-bg-color);
+    color: var(--text-primary);
+    margin-top: 12px;
+}
