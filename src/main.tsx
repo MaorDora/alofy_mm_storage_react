@@ -16,7 +16,8 @@ import ActivitiesPage from './pages/ActivitiesPage.tsx';
 import ActivityDetailsPage from './pages/ActivityDetailsPage.tsx';
 import EditActivityEquipmentPage from './pages/EditActivityEquipmentPage.tsx';
 import EquipmentFormPage from './pages/EquipmentFormPage.tsx';
-import ActivityFormPage from './pages/ActivityFormPage.tsx'; // ייבוא עמוד טופס הפעילות
+import ActivityFormPage from './pages/ActivityFormPage.tsx'; 
+import FilteredEquipmentPage from './pages/FilteredEquipmentPage.tsx'; // 1. ייבוא העמוד החדש
 
 import './index.css' 
 
@@ -70,11 +71,15 @@ const router = createBrowserRouter([
         element: <ActivityFormPage />,
       },
       {
-        // --- זה הנתיב שמתקן את השגיאה 404 ---
         path: "activities/edit/:activityId", // טופס עריכת *פרטי* פעילות
         element: <ActivityFormPage />,
+      },
+      // --- 2. הוספת הנתיב החדש ---
+      {
+        path: "items/filter/:filterType", // נתיב לפריטים מסוננים
+        element: <FilteredEquipmentPage />,
       }
-      // ------------------------------------
+      // --------------------------
     ]
   },
   {

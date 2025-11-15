@@ -1,0 +1,165 @@
+/* src/pages/HomePage.css */
+
+
+/* סגנונות שהועתקו מ-index.css הישן */
+
+.dashboard-card {
+    background-color: var(--card-bg-color);
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: transform 0.1s ease;
+}
+
+.dashboard-card:active {
+    transform: scale(0.99);
+}
+
+.card-header {
+    padding: 16px;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.card-content {
+    padding: 16px;
+    color: var(--text-primary);
+}
+
+.chevron {
+    font-size: 20px;
+    color: var(--text-secondary);
+    transform: rotate(180deg);
+}
+
+
+/* --- פריטי "דורש טיפול" --- */
+
+.attention-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #3a3a3a;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s ease;
+}
+
+.attention-item:last-child {
+    border-bottom: none;
+}
+
+.attention-item:hover {
+    background-color: #333;
+}
+
+.attention-item:active {
+    transform: scale(0.99);
+}
+
+.attention-details {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.attention-icon {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.attention-text {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.attention-count {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+
+/* --- פריטי "פעילות קרובה" --- */
+
+.activity-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #3a3a3a;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s ease;
+    text-decoration: none;
+    /* ללינקים */
+    color: var(--text-primary);
+    /* ללינקים */
+}
+
+.activity-list-item:last-child {
+    border-bottom: none;
+}
+
+.activity-list-item:hover {
+    background-color: #333;
+}
+
+.activity-list-item:active {
+    transform: scale(0.99);
+}
+
+.activity-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.activity-title {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.activity-time {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.activity-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 15px;
+    text-align: left;
+}
+
+.status-ready {
+    color: var(--status-green);
+}
+
+.status-gaps {
+    color: var(--status-red);
+}
+
+.status-gaps .status-subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    display: block;
+}
+
+
+/* צבעי אייקונים */
+
+.icon-red {
+    color: var(--status-red);
+}
+
+.icon-orange {
+    color: var(--status-orange);
+}

@@ -44,7 +44,7 @@ const EquipmentItemRow: React.FC<EquipmentItemRowProps> = ({ item, onClick }) =>
       </div>
       <div className={`equipment-status ${statusInfo.class}`}>
         <span className="status-dot"></span>
-        <span>${statusInfo.text}</span>
+        <span>{statusInfo.text}</span>
       </div>
     </div>
   );
