@@ -14,20 +14,13 @@
     --border-radius: 12px;
 }
 
-html {
-    height: 100%;
-    overflow: hidden;
-}
-
 body {
     font-family: 'Heebo', sans-serif;
     background-color: var(--bg-color);
     color: var(--text-primary);
     margin: 0;
     padding: 0;
-    height: 100%;
     position: relative;
-    overflow: hidden;
 }
 
 
