@@ -175,6 +175,22 @@
 }
 
 
+/* src/App.css */
+
+
+/* ... (כל מה שקיים) ... */
+
+.page-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* זה החשוב - מונע גלילה אופקית בזמן אנימציה */
+    padding-bottom: 120px;
+    position: relative;
+    /* חובה עבור אנימציות 'absolute' */
+}
+
+
 /* שורה זו צריכה להישאר ב-EquipmentItemRow.css או לעבור ל-App.css אם רוצים רקע */
 
 
