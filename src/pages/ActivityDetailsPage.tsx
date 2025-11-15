@@ -1,13 +1,14 @@
 // src/pages/ActivityDetailsPage.tsx
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDatabase } from '../contexts/DatabaseContext';
 import HeaderNav from '../components/HeaderNav';
+import ActivityOptionsModal from '../components/ActivityOptionsModal';
 import type { Activity, EquipmentItem } from '../types';
-import './ActivityDetailsPage.css'; // ייבוא העיצוב החדש
+import './ActivityDetailsPage.css';
 
-// מפה לתרגום סטטוסים, כמו בקוד הישן
-//
+// 1. האייקון הוסר מפה (עבר ל-HeaderNav)
+
 const statusMap: { [key: string]: string } = {
   'broken': 'לא כשיר',
   'repair': 'בתיקון',
@@ -18,41 +19,35 @@ function ActivityDetailsPage() {
   const { activityId } = useParams<{ activityId: string }>();
   const navigate = useNavigate();
   const { activities, equipment, isLoading } = useDatabase();
+  
+  const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
 
-  // שימוש ב-useMemo כדי לחשב את נתוני העמוד
-  // הלוגיקה כאן מועתקת ישירות מ-renderActivityDetails
-  //
+  // ... (useMemo נשאר ללא שינוי)
   const { activity, finalAssignedItems, finalMissingItems } = useMemo(() => {
     const activity = activities.find(act => act.id === activityId);
     if (!activity) {
       return { activity: null, finalAssignedItems: [], finalMissingItems: [] };
     }
-
     const finalAssignedItems: EquipmentItem[] = [];
     const finalMissingItems: EquipmentItem[] = [];
-
-    // 1. בדוק את כל הפריטים ש"אמורים" להיות כשירים
     activity.equipmentRequiredIds.forEach(itemId => {
       const item = equipment.find(e => e.id === itemId);
       if (item) {
         if (item.status === 'available' || item.status === 'charging') {
           finalAssignedItems.push(item);
         } else {
-          finalMissingItems.push(item); // הפריט התקלקל!
+          finalMissingItems.push(item);
         }
       }
     });
-
-    // 2. הוסף את הפריטים ש"כבר" היו חסרים
     activity.equipmentMissingIds.forEach(itemId => {
       const item = equipment.find(e => e.id === itemId);
       if (item) {
         finalMissingItems.push(item);
       }
     });
-
     return { activity, finalAssignedItems, finalMissingItems };
-  }, [activityId, activities, equipment]); // חשב מחדש רק כשאלה משתנים
+  }, [activityId, activities, equipment]);
 
   if (isLoading) {
     return <div>טוען פרטי פעילות...</div>;
@@ -62,7 +57,6 @@ function ActivityDetailsPage() {
     return <div><HeaderNav title="שגיאה" /><p style={{ textAlign: 'center' }}>פעילות לא נמצאה.</p></div>;
   }
 
-  // ניווט לעמוד עריכת הציוד (שניצור בהמשך)
   const handleEditEquipment = () => {
     navigate(`/activities/${activityId}/edit`);
   };
@@ -73,7 +67,13 @@ function ActivityDetailsPage() {
 
   return (
     <div>
-      <HeaderNav title={activity.name} />
+      {/* 2. התיקון:
+        הסרנו את 'rightSlot' והחלפנו אותו ב-prop הנקי
+      */}
+      <HeaderNav 
+        title={activity.name} 
+        onOptionsMenuClick={() => setIsOptionsModalOpen(true)}
+      />
       
       <div className="details-card">
         <h3 className="card-title">
@@ -82,16 +82,12 @@ function ActivityDetailsPage() {
             ערוך
           </span>
         </h3>
-
         <div className="equipment-scroll-pane">
-          
-          {/* רשימת פריטים חסרים */}
           {finalMissingItems.length > 0 && (
             finalMissingItems.map(item => (
               <div 
                 className="status-item missing" 
                 key={item.id}
-                // TODO: להוסיף פתיחת מודאל טיפול בפער
                 onClick={() => alert(`טיפול בפער עבור: ${item.name}`)}
               >
                 <span className="status-item-icon icon-red">&times;</span>
@@ -104,10 +100,7 @@ function ActivityDetailsPage() {
               </div>
             ))
           )}
-
           <h4 className="pane-subtitle">ציוד כשיר ומשוריין</h4>
-
-          {/* רשימת פריטים כשירים */}
           {finalAssignedItems.length === 0 ? (
             <p style={{ color: 'var(--text-secondary)', padding: '10px 0', textAlign: 'center' }}>
               לא שוריין ציוד לפעילות זו.
@@ -126,8 +119,13 @@ function ActivityDetailsPage() {
         </div>
       </div>
       
-      {/* TODO: נוסיף כאן את כפתורי ה-Check-in/Check-out בהמשך */}
-
+      {/* רינדור מותנה של המודאל (ללא שינוי) */}
+      {isOptionsModalOpen && (
+        <ActivityOptionsModal 
+          activity={activity}
+          onClose={() => setIsOptionsModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

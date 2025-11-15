@@ -1,7 +1,7 @@
 // src/components/EquipmentSelectItem.tsx
 import React from 'react';
 import type { EquipmentItem } from '../types';
-import EquipmentItemRow from './EquipmentItemRow'; // שימוש חוזר ברכיב הקיים
+import EquipmentItemRow from './EquipmentItemRow';
 
 interface EquipmentSelectItemProps {
   item: EquipmentItem;
@@ -23,26 +23,33 @@ const EquipmentSelectItem: React.FC<EquipmentSelectItemProps> = ({
     }
   };
 
+  // 1. --- יצרנו פונקציה נפרדת לצ'קבוקס ---
+  const handleCheckboxClick = (e: React.MouseEvent) => {
+    // 2. מנע מהקליק "לבעבע" (bubble up) ל-div החיצוני
+    //    כדי ש-handleToggle לא יופעל פעמיים
+    e.stopPropagation();
+    
+    // 3. הפעל את אותה לוגיקה
+    handleToggle();
+  };
+
   const checkboxId = `item-select-${item.id}`;
 
   return (
     <div 
       className={`equipment-select-item ${isDisabled ? 'disabled' : ''}`}
-      onClick={handleToggle} // לחיצה על כל השורה מסמנת
+      onClick={handleToggle} // לחיצה על כל השורה
     >
-      {/* אנחנו מרנדרים את הרכיב EquipmentItemRow
-        אך מעבירים לו פונקציית onClick ריקה, 
-        מכיוון שה-div העוטף הזה מטפל בלחיצה.
-      */}
       <EquipmentItemRow item={item} onClick={() => {}} />
 
-      <div className="equipment-select-checkbox">
+      {/* 4. --- הוספנו onClick גם ל-div שעוטף את הצ'קבוקס --- */}
+      <div className="equipment-select-checkbox" onClick={handleCheckboxClick}>
         <input 
           type="checkbox" 
           id={checkboxId} 
           checked={isChecked} 
           disabled={isDisabled}
-          readOnly // אנחנו מנהלים את ה-state בלחיצה על ה-div
+          readOnly 
         />
         <label htmlFor={checkboxId}></label>
       </div>

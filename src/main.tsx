@@ -13,11 +13,10 @@ import HomePage from './pages/HomePage.tsx';
 import WarehousesPage from './pages/WarehousesPage.tsx';
 import WarehouseDetailsPage from './pages/WarehouseDetailsPage.tsx'; 
 import ActivitiesPage from './pages/ActivitiesPage.tsx';
-import EquipmentFormPage from './pages/EquipmentFormPage.tsx';
 import ActivityDetailsPage from './pages/ActivityDetailsPage.tsx';
-
-// 1. ייבוא העמוד החדש
-import EditActivityEquipmentPage from './pages/EditActivityEquipmentPage.tsx'; //
+import EditActivityEquipmentPage from './pages/EditActivityEquipmentPage.tsx';
+import EquipmentFormPage from './pages/EquipmentFormPage.tsx';
+import ActivityFormPage from './pages/ActivityFormPage.tsx'; // ייבוא עמוד טופס הפעילות
 
 import './index.css' 
 
@@ -32,48 +31,54 @@ const router = createBrowserRouter([
         </DatabaseProvider>
       </ProtectedRoute>
     ),
+    // כל הנתיבים כאן יוצגו בתוך ה-<Outlet /> של App.tsx
     children: [
       {
-        path: "/", 
+        path: "/", // עמוד הבית
         element: <HomePage />,
       },
       {
-        path: "warehouses", 
+        path: "warehouses", // רשימת מחסנים
         element: <WarehousesPage />,
       },
       {
-        path: "warehouses/:warehouseId", 
+        path: "warehouses/:warehouseId", // פרטי מחסן ספציפי
         element: <WarehouseDetailsPage />,
       },
       {
-        path: "activities", 
+        path: "activities", // רשימת פעילויות
         element: <ActivitiesPage />,
       },
       {
-        path: "activities/:activityId", 
+        path: "activities/:activityId", // פרטי פעילות
         element: <ActivityDetailsPage />,
       },
       {
-        // 2. החלפת הפלייס-הולדר בעמוד האמיתי
-        path: "activities/:activityId/edit", 
+        path: "activities/:activityId/edit", // עריכת *ציוד* לפעילות
         element: <EditActivityEquipmentPage />,
       },
       {
-        path: "item/new", 
+        path: "item/new", // טופס הוספת פריט
         element: <EquipmentFormPage />,
       },
       {
-        path: "item/edit/:itemId", 
+        path: "item/edit/:itemId", // טופס עריכת פריט
         element: <EquipmentFormPage />,
       },
       {
-        path: "activity/new", 
-        element: <div>(טופס הוספת פעילות - יבנה בהמשך)</div>,
+        path: "activity/new", // טופס הוספת פעילות
+        element: <ActivityFormPage />,
       },
+      {
+        // --- זה הנתיב שמתקן את השגיאה 404 ---
+        path: "activities/edit/:activityId", // טופס עריכת *פרטי* פעילות
+        element: <ActivityFormPage />,
+      }
+      // ------------------------------------
     ]
   },
   {
-    path: "/login", 
+    path: "/login", // עמוד הלוגין (מחוץ לאפליקציה המאובטחת)
     element: <LoginPage />,
   },
 ]);

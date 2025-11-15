@@ -1,77 +1,65 @@
 // src/pages/EditActivityEquipmentPage.tsx
-import { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDatabase } from '../contexts/DatabaseContext';
-import { updateActivityEquipment } from '../firebaseUtils'; //
+import { updateActivityEquipment } from '../firebaseUtils';
 import HeaderNav from '../components/HeaderNav';
-import EquipmentSelectItem from '../components/EquipmentSelectItem'; // 1. ייבוא הרכיב החדש
-import './EditActivityEquipmentPage.css'; // 2. ייבוא העיצוב
+import EquipmentSelectItem from '../components/EquipmentSelectItem';
+import './EditActivityEquipmentPage.css';
+// import '../components/Form.css'; // אין צורך, העיצוב הועתק לקובץ ה-CSS המקומי
 
 function EditActivityEquipmentPage() {
   const { activityId } = useParams<{ activityId: string }>();
   const navigate = useNavigate();
   const { activities, equipment: allEquipment, isLoading } = useDatabase();
 
-  // 3. State לניהול החיפוש
   const [searchTerm, setSearchTerm] = useState('');
-  
-  // 4. State לניהול הפריטים שנבחרו (נשתמש ב-Set לניהול יעיל של ID-ים)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  // 5. טעינת הפעילות הספציפית
   const activity = useMemo(() => {
     return activities.find(act => act.id === activityId);
   }, [activityId, activities]);
 
-  // 6. אפקט למילוי ראשוני של הפריטים שכבר משויכים לפעילות
   useEffect(() => {
     if (activity) {
-      // ניקח גם את הכשירים וגם את החסרים שכבר שויכו
-      //
       const initialIds = [
         ...activity.equipmentRequiredIds, 
         ...activity.equipmentMissingIds
       ];
       setSelectedIds(new Set(initialIds));
     }
-  }, [activity]); // תלות ב-activity (ירוץ כשהוא ייטען)
+  }, [activity]);
 
-  // 7. סינון הרשימה לפי חיפוש
-  //
+  // --- 1. התיקון של החיפוש ---
   const filteredEquipment = useMemo(() => {
     if (searchTerm === '') {
       return allEquipment;
     }
     const lowerSearchTerm = searchTerm.toLowerCase();
     return allEquipment.filter(item => 
-      item.name.toLowerCase().includes(lowerSearchTerm)
+      // נוודא ש-item.name קיים לפני שקוראים לו .toLowerCase()
+      item.name && item.name.toLowerCase().includes(lowerSearchTerm)
     );
   }, [allEquipment, searchTerm]);
+  // --- סוף התיקון ---
 
-  // 8. פונקציה לטיפול בלחיצה על צ'קבוקס
   const handleToggle = (itemId: string) => {
     setSelectedIds(prevIds => {
       const newIds = new Set(prevIds);
       if (newIds.has(itemId)) {
-        newIds.delete(itemId); // הסר אם קיים
+        newIds.delete(itemId);
       } else {
-        newIds.add(itemId); // הוסף אם לא קיים
+        newIds.add(itemId);
       }
       return newIds;
     });
   };
 
-  // 9. פונקציית שמירה
-  //
   const handleSave = async () => {
     if (!activityId) return;
-
-    // קרא לפונקציה מ-firebaseUtils
-    // הפונקציה הזו תמיין מחדש ל"כשירים" ו"חסרים" ותשמור ב-Firestore
     await updateActivityEquipment(activityId, Array.from(selectedIds), allEquipment);
-
     alert("השינויים נשמרו בהצלחה!");
-    navigate(-1); // חזור עמוד אחד אחורה (לפרטי הפעילות)
+    navigate(-1);
   };
 
   if (isLoading) {
@@ -96,10 +84,11 @@ function EditActivityEquipmentPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        {/* TODO: Add filter button logic */}
       </div>
 
-      <div className="equipment-list">
+      {/* --- 2. התיקון של הכפתור --- */}
+      {/* הוספנו div עוטף עם הקלאס החדש מה-CSS */}
+      <div className="equipment-list-container">
         {filteredEquipment.length === 0 && (
           <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '20px' }}>
             לא נמצאו פריטים תואמים.
@@ -107,12 +96,7 @@ function EditActivityEquipmentPage() {
         )}
         
         {filteredEquipment.map(item => {
-          // לוגיקה זהה לקוד הישן
-          //
-          // פריט ניתן לבחירה אם הוא כשיר או בטעינה
           const isSelectable = (item.status === 'available' || item.status === 'charging');
-          // פריט מושבת אם אי אפשר לבחור בו, *אלא אם* הוא כבר מסומן
-          // (מה שקורה אם הסטטוס שלו השתנה אחרי שכבר שויך)
           const isDisabled = !isSelectable && !selectedIds.has(item.id);
 
           return (
@@ -126,6 +110,7 @@ function EditActivityEquipmentPage() {
           );
         })}
       </div>
+      {/* --- סוף התיקון --- */}
 
       {/* כפתור שמירה תחתון */}
       <div className="action-buttons-sticky">

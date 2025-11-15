@@ -1,16 +1,14 @@
 /* src/pages/EditActivityEquipmentPage.css */
 
-
-/* מיכל עליון לחיפוש ופילטר */
-
-
-/* */
-
 .search-filter-container {
     display: flex;
     gap: 12px;
     align-items: center;
     padding: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--bg-color);
 }
 
 .search-bar {
@@ -42,29 +40,37 @@
     outline: none;
 }
 
-
-/* --- הוספנו את העיצוב הזה --- */
+.equipment-list-container {
+    /* הריפוד הזה מוודא שהפריט האחרון ברשימה 
+       לא יוסתר על ידי הכפתור הדביק */
+    padding: 8px 0 90px 0;
+}
 
 
 /* כפתור שמירה תחתון "דביק" */
 
 .action-buttons-sticky {
     position: fixed;
-    /* שונה מ-absolute כדי להיות תמיד בתחתית המסך */
-    bottom: 0;
+    /* --- התיקון --- */
+    /* במקום bottom: 0, 
+      נקבע את התחתית לגובה המדויק של הניווט התחתון 
+    */
+    bottom: calc(65px + env(safe-area-inset-bottom));
+    /* --- סוף התיקון --- */
     left: 0;
     right: 0;
     background-color: var(--bg-color);
-    /* רקע כהה למקרה של גלילה */
     padding: 16px;
-    padding-bottom: calc(16px + env(safe-area-inset-bottom));
-    /* ריפוד בטוח */
+    /* הסרנו את ה-padding-bottom המיוחד מכאן
+      כי הכפתור כבר לא בתחתית המוחלטת של המסך 
+    */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
     z-index: 10;
+    /* z-index תקין, כי הוא כבר לא מתנגש עם ה-nav */
 }
 
 
-/* כפתור שמירה (מ-Form.css) */
+/* ... (כל שאר הסגנונות נשארים זהים) ... */
 
 .btn-submit {
     display: block;
@@ -81,21 +87,11 @@
     background-color: var(--action-color);
     color: var(--text-primary);
     margin: 0;
-    /* איפוס margin */
 }
 
 .btn-submit:active {
     transform: scale(0.98);
 }
-
-
-/* --- סוף תוספת --- */
-
-
-/* סגנון עבור פריט ברשימת הבחירה */
-
-
-/* */
 
 .equipment-select-item {
     display: flex;
@@ -103,11 +99,7 @@
     border-bottom: 1px solid #3a3a3a;
     cursor: pointer;
     background-color: var(--card-bg-color);
-    /* הוספנו רקע */
 }
-
-
-/* הסרת עיצוב ברירת מחדל מרכיב הליבה */
 
 .equipment-select-item .equipment-item-content {
     flex-grow: 1;
@@ -118,12 +110,6 @@
 .equipment-select-checkbox {
     padding: 0 16px;
 }
-
-
-/* עיצוב צ'קבוקס מותאם אישית (עגול) */
-
-
-/* */
 
 .equipment-select-checkbox input[type="checkbox"] {
     display: none;
@@ -156,12 +142,6 @@
     opacity: 0.7;
 }
 
-
-/* התאמת פריט מושבת */
-
-
-/* */
-
 .equipment-select-item.disabled {
     opacity: 0.5;
 }
@@ -172,5 +152,4 @@
 
 .equipment-select-item.disabled .equipment-item-content:hover {
     background-color: var(--card-bg-color);
-    /* ביטול אפקט hover */
 }

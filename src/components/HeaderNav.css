@@ -3,10 +3,11 @@
 .header-nav {
     display: flex;
     align-items: center;
-    /* ריפוד בטוח */
     padding: calc(40px + env(safe-area-inset-top)) 16px 20px 16px;
     border-bottom: 1px solid var(--card-bg-color);
     position: relative;
+    justify-content: center;
+    /* מרכוז הכותרת */
 }
 
 .back-button {
@@ -15,19 +16,35 @@
     font-weight: 500;
     cursor: pointer;
     position: absolute;
+    /* ב-RTL, צד ימין הוא ה"התחלה" (Back) */
     right: 16px;
-    /* מותאם ל-RTL */
+    padding: 10px;
+    z-index: 10;
 }
 
 .header-title {
     font-size: 18px;
     font-weight: 700;
     color: var(--text-primary);
-    /* מרכוז אוטומטי */
-    margin: 0 auto;
-    /* טיפול בגלישה */
-    max-width: calc(100% - 120px);
+    margin: 0;
+    max-width: calc(100% - 140px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: center;
+}
+
+.header-options-button {
+    position: absolute;
+    /* ב-RTL, צד שמאל הוא ה"סוף" (Options) */
+    left: 16px;
+    top: calc(40px + env(safe-area-inset-top));
+    padding: 10px;
+    z-index: 10;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+.header-options-button svg {
+    display: block;
 }
