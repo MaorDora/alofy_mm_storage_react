@@ -1,7 +1,7 @@
 // src/firebaseUtils.ts
-import { doc, updateDoc, deleteDoc, setDoc, addDoc, collection, writeBatch, arrayRemove } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc, addDoc, collection, writeBatch, arrayRemove } from 'firebase/firestore';
 import { db } from './firebaseConfig';
-import type { EquipmentItem, Activity, Warehouse, AppUser } from './types';
+import type { EquipmentItem, Activity, Warehouse} from './types';
 
 // סוגי הסטטוסים האפשריים
 type EquipmentStatus = EquipmentItem['status'];

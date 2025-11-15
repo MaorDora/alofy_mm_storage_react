@@ -146,7 +146,6 @@ function ActivityDetailsPage() {
   // --- סוף הוספת Handlers ---
 
   const totalAssigned = finalAssignedItems.length;
-  const totalMissing = finalMissingItems.length;
   const totalItems = activity.equipmentRequiredIds.length + activity.equipmentMissingIds.length; 
 
   return (

@@ -1,5 +1,5 @@
 // src/pages/WarehouseDetailsPage.tsx
-import React, { useState, useMemo } from 'react'; // 1. הוספנו useState
+import { useState, useMemo } from 'react'; // 1. הוספנו useState
 import { useParams } from 'react-router-dom';
 import { useDatabase } from '../contexts/DatabaseContext';
 import HeaderNav from '../components/HeaderNav';
