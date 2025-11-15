@@ -1,47 +1,55 @@
 // src/App.tsx
 import { useState } from 'react';
-import { Outlet, useLocation } from "react-router-dom"; // 1. ייבוא useLocation
-import BottomNav from './components/BottomNav';
+import { Outlet, useLocation } from "react-router-dom";
+// הסרנו את סיומות הקבצים .tsx כדי להתאים להגדרות ה-bundler
+import BottomNav from './components/BottomNav'; 
 import Fab from './components/Fab';
 import QuickAddModal from './components/QuickAddModal';
-import { AnimatePresence, motion } from 'framer-motion'; // 2. ייבוא motion ו- AnimatePresence
+import { AnimatePresence, motion, type Variants } from 'framer-motion';
 
 import './App.css'; 
 
-// 3. הגדרת האנימציה (כאן, במקום בקובץ נפרד)
-const pageAnimation = {
+// 3. --- החלפנו לאנימציית Spring "נוחה" ומהירה ---
+const pageAnimation: Variants = {
   initial: {
     opacity: 0,
-    x: "100vw" // התחל מימין
+    x: "20vw" // התחל קצת מימין (לא מהקצה)
   },
   in: {
     opacity: 1,
     x: 0, // החלק למרכז
-    transition: { type: "tween", ease: "anticipate", duration: 0.3 }
+    transition: { 
+      type: "spring", // סוג האנימציה: קפיץ
+      stiffness: 260, // קשיחות הקפיץ (כמה מהר מגיב)
+      damping: 25,     // ריסון (כמה מהר מפסיק לקפוץ)
+    }
   },
   out: {
     opacity: 0,
-    x: "-100vw", // החלק החוצה שמאלה
-    transition: { type: "tween", ease: "easeIn", duration: 0.2 }
+    x: "-20vw", // החלק קצת שמאלה
+    transition: { 
+      type: "tween", 
+      ease: "easeIn",
+      duration: 0.15 // יציאה מהירה וחלקה
+    }
   }
 };
+// --- סוף התיקון ---
 
 function App() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const location = useLocation(); // 4. קבלת המיקום הנוכחי
+  const location = useLocation(); 
 
   return (
     <div className="app-container">
       <main className="page-content">
         <AnimatePresence mode="wait" initial={false}>
-          {/* 5. עטיפת ה-Outlet ב-motion.div עם מפתח ייחודי */}
           <motion.div
-            key={location.pathname} // המפתח משתנה בכל ניווט
+            key={location.pathname} 
             variants={pageAnimation}
             initial="initial"
-            animate="in" // <-- כאן התיקון, הנקודה הוסרה
+            animate="in"
             exit="out"
-            // העיצוב הזה גורם לעמוד לתפוס את כל המרחב
             style={{ position: 'absolute', width: '100%', top: 0, left: 0 }}
           >
             <Outlet />
